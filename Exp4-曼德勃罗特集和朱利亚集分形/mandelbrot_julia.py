@@ -49,7 +49,7 @@ def generate_mandelbrot(width=800, height=800, max_iter=100):
         B += mask
         Z[mask] = Z[mask]**2 + C[mask]
     
-    return B  # 转置以保持与原始代码一致的维度
+    return B.T  # 转置以保持与原始代码一致的维度
 
 
 def generate_julia(c, width=800, height=800, max_iter=100):
@@ -95,7 +95,7 @@ def generate_julia(c, width=800, height=800, max_iter=100):
         B += mask
         Z[mask] = Z[mask]**2 + c
     
-    return B  # 转置以保持与原始代码一致的维度
+    return B.T  # 转置以保持与原始代码一致的维度
 
 
 def plot_fractal(data, title, filename=None, cmap='magma'):
@@ -107,7 +107,7 @@ def plot_fractal(data, title, filename=None, cmap='magma'):
     :param cmap: 颜色映射
     """
     plt.figure(figsize=(10, 10))
-    plt.imshow(data, cmap=cmap, origin='lower')
+    plt.imshow(data.T, cmap=cmap, origin='lower')
     plt.title(title)
     plt.axis('off')
     
