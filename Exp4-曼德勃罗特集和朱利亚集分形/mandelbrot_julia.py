@@ -78,4 +78,4 @@ if __name__ == "__main__":
     
     for i, c in enumerate(julia_c_values):
         julia = generate_julia(c, max_iter=100)
-        plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")f})", f"julia_{i+1}.png")
+        plot_fractal(julia, f"Julia Set(c = {c:.3f})", f"julia_{i+1}.png")f})")
