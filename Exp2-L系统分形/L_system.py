@@ -14,9 +14,15 @@ def apply_rules(axiom, rules, iterations):
     :return: 经过多轮迭代后的最终字符串
     """
     # TODO: 实现L-System字符串生成逻辑
-    pass
+    current=axiom
+    for _ in range(iterations):
+        next_str = []
+        for char in current:
+            next_str.append(rules.get(char,char))
+        current=' '.join(next_str)
+    return current
 
-def draw_l_system(instructions, angle, step, start_pos=(0,0), start_angle=0, savefile=None):
+def draw_l_system(instructions, angle, step, start_pos=(0,0), start_angle=0, savefile=None,tree_mode=False,title=()):
     """
     根据L-System指令绘图
     :param instructions: 指令字符串（如"F+F--F+F"）
@@ -27,7 +33,37 @@ def draw_l_system(instructions, angle, step, start_pos=(0,0), start_angle=0, sav
     :param savefile: 若指定则保存为图片文件，否则直接显示
     """
     # TODO: 实现L-System绘图逻辑
-    pass
+    x,y=start_pos
+    current_angle=start_angle
+    stack=[]
+    fig, ax = plt.subplots()
+
+    for cmd in instructions:
+        if cmd in ('F','0','1'):
+            new_x=x+step*math.cos(math.radians(current_angle))
+            new_y=y+step*math.sin(math.radians(current_angle))
+            ax.plot([x,new_x],[y,new_y],'b-' if tree_mode else 'green',linewidth=1.2 if tree_mode else 1)
+            x,y=(new_x,new_y)
+        elif cmd == '+':
+            current_angle+=angle
+        elif cmd == '-':
+            current_angle-=angle
+        elif cmd == '[':
+            stack.append((x,y,current_angle))
+            if tree_mode:
+                current_angle+=angle
+        elif cmd == ']':
+            x,y,current_angle=stack.pop()
+            if tree_mode:
+                current_angle-=angle
+    ax.set_aspect('equal')
+    ax.axis('off')
+    plt.title(title)
+    if savefile:
+        plt.savefig(savefile, bbox_inches='tight',pad_inches=0.1,dpi=150)
+        plt.close()
+    else:
+        plt.show()
 
 if __name__ == "__main__":
     """
@@ -35,18 +71,24 @@ if __name__ == "__main__":
     学生可根据下方示例，调整参数体验不同分形效果
     """
     # 1. 生成并绘制科赫曲线
-    axiom = "F"  # 公理
-    rules = {"F": "F+F--F+F"}  # 规则
-    iterations = 3  # 迭代次数
-    angle = 60  # 每次转角
-    step = 10  # 步长
-    instr = apply_rules(axiom, rules, iterations)  # 生成指令字符串
-    draw_l_system(instr, angle, step, savefile="l_system_koch.png")  # 绘图并保存
+    #生成并绘制科赫曲线
+    koch_axiom="F"   #公理
+    koch_rules={"F":"F+F--F+F"}   #规则
+    koch_iterations=4   #迭代次数
+    koch_angle=60   #转角
+    koch_step=5   #步长
+    koch_instr=apply_rules(koch_axiom,koch_rules,koch_iterations)#生成指令字符串
+    #plt.figure(figsize=(10,3))
+    draw_l_system(koch_instr,koch_angle,koch_step,title="L-System Koch Curve")   #绘图并保存
+    plt.show()
 
     # 2. 生成并绘制分形二叉树
-    axiom = "0"
-    rules = {"1": "11", "0": "1[0]0"}
-    iterations = 5
-    angle = 45
-    instr = apply_rules(axiom, rules, iterations)
-    draw_l_system(instr, angle, step, savefile="fractal_tree.png")
+    axiom="0"
+    rules={"1":"11","0":"1[0]0"}
+    iterations=7
+    angle=45
+    step=7
+    instr=apply_rules(axiom,rules,iterations)
+    #plt.figure(figsize=(7,7))
+    draw_l_system(instr,angle,step,start_angle=90,tree_mode=True,title="L-System Fractal Tree")
+    plt.show()
