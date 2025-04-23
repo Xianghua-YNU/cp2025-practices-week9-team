@@ -1,3 +1,9 @@
+"""
+Created on Wed Apr 23 19:19:37 2025
+
+@author: Lenovo
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -43,7 +49,7 @@ def generate_mandelbrot(width=800, height=800, max_iter=100):
         B += mask
         Z[mask] = Z[mask]**2 + C[mask]
     
-    return B.T  # 转置以保持与原始代码一致的维度
+    return B  # 转置以保持与原始代码一致的维度
 
 
 def generate_julia(c, width=800, height=800, max_iter=100):
@@ -89,7 +95,7 @@ def generate_julia(c, width=800, height=800, max_iter=100):
         B += mask
         Z[mask] = Z[mask]**2 + c
     
-    return B.T  # 转置以保持与原始代码一致的维度
+    return B  # 转置以保持与原始代码一致的维度
 
 
 def plot_fractal(data, title, filename=None, cmap='magma'):
@@ -101,7 +107,7 @@ def plot_fractal(data, title, filename=None, cmap='magma'):
     :param cmap: 颜色映射
     """
     plt.figure(figsize=(10, 10))
-    plt.imshow(data.T, cmap=cmap, origin='lower')
+    plt.imshow(data, cmap=cmap, origin='lower')
     plt.title(title)
     plt.axis('off')
     
@@ -125,6 +131,9 @@ if __name__ == "__main__":
         0.285 + 0.01j   # 复杂结构Julia集
     ]
     
+    for i, c in enumerate(julia_c_values):
+        julia = generate_julia(c, width, height, max_iter)
+        plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")
     for i, c in enumerate(julia_c_values):
         julia = generate_julia(c, width, height, max_iter)
         plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")
