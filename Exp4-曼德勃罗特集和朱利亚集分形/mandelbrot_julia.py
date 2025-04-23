@@ -13,6 +13,7 @@ def generate_mandelbrot(width=800, height=800, max_iter=100):
     y = np.linspace(-1.5, 1.5, height)
     Re, Im = np.meshgrid(x, y)
     C = Re + 1j * Im
+    
     B = np.zeros(C.shape)  # 记录迭代次数
     Z = np.zeros(C.shape, dtype=np.complex128)  # Z的初值为0
     
@@ -37,7 +38,7 @@ def generate_julia(c, width=800, height=800, max_iter=100):
     Re, Im = np.meshgrid(x, y)
     Z0 = Re + 1j * Im
     
-    B = np.zeros(Z0.shape)
+    B = np.zeros(Z0.shape)  # 记录迭代次数
     Z = Z0.copy()  # 初始值为网格点
     
     for j in range(max_iter):
@@ -78,4 +79,4 @@ if __name__ == "__main__":
     
     for i, c in enumerate(julia_c_values):
         julia = generate_julia(c, max_iter=100)
-        plot_fractal(julia, f"Julia Set(c = {c:.3f})", f"julia_{i+1}.png")f})")
+        plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")
