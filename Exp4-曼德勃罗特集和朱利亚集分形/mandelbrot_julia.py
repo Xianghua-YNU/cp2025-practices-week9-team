@@ -1,7 +1,9 @@
 """
-项目4: Mandelbrot与Julia集分形生成模板
-请补全下方函数，实现Mandelbrot与Julia集的生成与可视化。
+Created on Wed Apr 23 19:19:37 2025
+
+@author: Lenovo
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -34,7 +36,21 @@ def generate_mandelbrot(width=800, height=800, max_iter=100):
     #     Z[mask] = Z[mask]**2 + C[mask]
     
     # TODO: 返回转置后的结果
-    pass
+    x = np.linspace(-2.0, 1.0, width)
+    y = np.linspace(-1.5, 1.5, height)
+    Re, Im = np.meshgrid(x, y)
+    C = Re + 1j * Im
+    
+    B = np.zeros(C.shape)  #记录迭代次数
+    Z = np.zeros(C.shape, dtype=np.complex128)  #Z的初值为0
+    
+    for j in range(max_iter):
+        mask = np.abs(Z) <= 2
+        B += mask
+        Z[mask] = Z[mask]**2 + C[mask]
+    
+    return B.T  # 转置以保持与原始代码一致的维度
+
 
 def generate_julia(c, width=800, height=800, max_iter=100):
     """
@@ -66,7 +82,21 @@ def generate_julia(c, width=800, height=800, max_iter=100):
     #     Z[mask] = Z[mask]**2 + c
     
     # TODO: 返回转置后的结果
-    pass
+    x = np.linspace(-2.0, 2.0, width)
+    y = np.linspace(-2.0, 2.0, height)
+    Re, Im = np.meshgrid(x, y)
+    Z0 = Re + 1j * Im
+    
+    B = np.zeros(Z0.shape)
+    Z = Z0.copy()  #初始值为网格点
+    
+    for j in range(max_iter):
+        mask = np.abs(Z) <= 2
+        B += mask
+        Z[mask] = Z[mask]**2 + c
+    
+    return B.T  # 转置以保持与原始代码一致的维度
+
 
 def plot_fractal(data, title, filename=None, cmap='magma'):
     """
@@ -101,6 +131,9 @@ if __name__ == "__main__":
         0.285 + 0.01j   # 复杂结构Julia集
     ]
     
+    for i, c in enumerate(julia_c_values):
+        julia = generate_julia(c, width, height, max_iter)
+        plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")
     for i, c in enumerate(julia_c_values):
         julia = generate_julia(c, width, height, max_iter)
         plot_fractal(julia, f"Julia Set (c = {c:.3f})", f"julia_{i+1}.png")
